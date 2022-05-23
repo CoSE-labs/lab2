@@ -2,22 +2,57 @@ package lab2
 
 import (
 	"fmt"
+	. "gopkg.in/check.v1"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
-func TestPrefixToPostfix(t *testing.T) {
-	res, err := PrefixToPostfix("+ 5 * - 4 2 3")
-	if assert.Nil(t, err) {
-		assert.Equal(t, "4 2 - 3 * 5 +", res)
+func Test(t *testing.T) { TestingT(t) }
+
+type MySuite struct{}
+
+var _ = Suite(&MySuite{})
+
+func (s *MySuite) TestPostfixToPrefix(c *C) {
+	inputs := []string{
+		"A B C * + D +",
+		"A B + C D + *",
+		"A B * C D * +",
+		"A B + C + D +",
+		"6 9 + 4 2 * 4 2 ^ + +",
+		"a t + b a c + * c d + ^ *",
+		"A B C * + D +@",
+		"text text",
+		"",
+	}
+	expected := []string{
+		"++A*BCD",
+		"*+AB+CD",
+		"+*AB*CD",
+		"+++ABCD",
+		"++69+*42^42",
+		"*+at^*b+ac+cd",
+		"Could not convert.\n",
+		"Could not convert.\n",
+		"Could not convert.\n",
+	}
+
+	for ind := range inputs {
+		res, err := postfixToPrefix(inputs[ind])
+		if err == nil {
+			c.Check(res, Equals, expected[ind])
+		} else {
+			c.Check(err, ErrorMatches, expected[ind])
+		}
 	}
 }
 
-func ExamplePrefixToPostfix() {
-	res, _ := PrefixToPostfix("+ 2 2")
+func Example_postfixToPrefix() {
+	res, err := postfixToPrefix("4 8 3 * +")
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(res)
 
 	// Output:
-	// 2 2 +
+	// +4*83
 }

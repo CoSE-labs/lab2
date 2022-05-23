@@ -2,7 +2,6 @@ package lab2
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -45,6 +44,10 @@ func isOperand(character byte) bool {
 }
 
 func convert(input string) (string, error) {
+	if input == "" {
+		return "", errors.New("Could not convert.\n")
+	}
+
 	var stack Stack
 	//input := "A B C / - A K / L - * "
 	byteInput := []byte(input)
@@ -82,4 +85,3 @@ func stackToString(arg Stack) string {
 func postfixToPrefix(input string) (string, error) {
 	return convert(input)
 }
-
