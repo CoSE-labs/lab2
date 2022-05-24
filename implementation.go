@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const magicError = "Could not convert.\n"
+
 type Stack []string
 
 func (s *Stack) isEmpty() bool {
@@ -43,11 +45,19 @@ func isOperand(character byte) bool {
 	return false
 }
 
-func convert(input string) (string, error) {
-	if input == "" {
-		return "", errors.New("Could not convert.\n")
+func hasOperator(inpString string) bool {
+	for _, character := range inpString {
+		if isOperator(byte(character)) {
+			return true
+		}
 	}
+	return false
+}
 
+func convert(input string) (string, error) {
+	if input == "" || hasOperator(input) == false {
+		return "", errors.New(magicError)
+	}
 	var stack Stack
 	//input := "A B C / - A K / L - * "
 	byteInput := []byte(input)
@@ -68,7 +78,7 @@ func convert(input string) (string, error) {
 		} else if character == space {
 			continue
 		} else {
-			return "", errors.New("Could not convert.\n")
+			return "", errors.New(magicError)
 		}
 
 	}
