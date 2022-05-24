@@ -13,35 +13,24 @@ type MySuite struct{}
 var _ = Suite(&MySuite{})
 
 func (s *MySuite) TestPostfixToPrefix(c *C) {
-	inputs := []string{
-		"A B C * + D +",
-		"A B + C D + *",
-		"A B * C D * +",
-		"A B + C + D +",
-		"6 9 + 4 2 * 4 2 ^ + +",
-		"a t + b a c + * c d + ^ *",
-		"A B C * + D +@",
-		"text text",
-		"",
-	}
-	expected := []string{
-		"++A*BCD",
-		"*+AB+CD",
-		"+*AB*CD",
-		"+++ABCD",
-		"++69+*42^42",
-		"*+at^*b+ac+cd",
-		"Could not convert.\n",
-		"Could not convert.\n",
-		"Could not convert.\n",
+	tests := map[string]string{
+		"A B C * + D +":             "++A*BCD",
+		"A B + C D + *":             "*+AB+CD",
+		"A B * C D * +":             "+*AB*CD",
+		"A B + C + D +":             "+++ABCD",
+		"6 9 + 4 2 * 4 2 ^ + +":     "++69+*42^42",
+		"a t + b a c + * c d + ^ *": "*+at^*b+ac+cd",
+		"A B C * + D +@":            "Could not convert.\n",
+		"text text":                 "Could not convert.\n",
+		"":                          "Could not convert.\n",
 	}
 
-	for ind := range inputs {
-		res, err := postfixToPrefix(inputs[ind])
+	for actual, expected := range tests {
+		res, err := postfixToPrefix(actual)
 		if err == nil {
-			c.Check(res, Equals, expected[ind])
+			c.Check(res, Equals, expected)
 		} else {
-			c.Check(err, ErrorMatches, expected[ind])
+			c.Check(err, ErrorMatches, expected)
 		}
 	}
 }
