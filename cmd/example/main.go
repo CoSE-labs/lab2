@@ -2,26 +2,46 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	lab2 "github.com/roman-mazur/architecture-lab-2"
+	lab2 "github.com/CoSE-labs/lab2"
+	"os"
+	"strings"
 )
 
 var (
 	inputExpression = flag.String("e", "", "Expression to compute")
-	// TODO: Add other flags support for input and output configuration.
+	inputFile       = flag.String("f", "", "Expression from file")
+	outputFile      = flag.String("o", "", "Filename to print result")
 )
 
+var mainComputeHandler lab2.ComputeHandler
+
 func main() {
+
 	flag.Parse()
 
-	// TODO: Change this to accept input from the command line arguments as described in the task and
-	//       output the results using the ComputeHandler instance.
-	//       handler := &lab2.ComputeHandler{
-	//           Input: {construct io.Reader according the command line parameters},
-	//           Output: {construct io.Writer according the command line parameters},
-	//       }
-	//       err := handler.Compute()
+	if *inputExpression != "" {
+		mainComputeHandler = lab2.ComputeHandler{Input: strings.NewReader(*inputExpression)}
+	} else if *inputFile != "" {
+		fil, err := os.Open(*inputFile)
+		if err != nil {
+			panic(err)
+		}
+		defer fil.Close()
+		mainComputeHandler = lab2.ComputeHandler{Input: fil}
+	}
+	if *outputFile != "" {
+		fil, err := os.Open(*outputFile)
+		if err != nil {
+			panic(err)
+		}
+		defer fil.Close()
+		mainComputeHandler = lab2.ComputeHandler{Output: fil}
+	} else {
+		mainComputeHandler = lab2.ComputeHandler{Output: os.Stdout}
+	}
 
-	res, _ := lab2.PrefixToPostfix("+ 2 2")
-	fmt.Println(res)
+	err := mainComputeHandler.Compute()
+	if err != nil {
+		panic(err)
+	}
 }
