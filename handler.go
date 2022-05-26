@@ -25,9 +25,11 @@ func (ch *ComputeHandler) Compute() error {
 
 	}
 
-	res, _ := postfixToPrefix(string(computable))
-
-	_, err := ch.Output.Write([]byte(res))
+	res, err := postfixToPrefix(string(computable))
+	if err != nil {
+		return err
+	}
+	_, err = ch.Output.Write([]byte(res))
 	if err != nil {
 		return err
 	}
