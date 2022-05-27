@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-const magicError = "Could not convert.\n"
+const magicError = "could not convert"
 
 type Stack []string
 
@@ -55,7 +55,7 @@ func hasOperator(inpString string) bool {
 }
 
 func convert(input string) (string, error) {
-	if input == "" || hasOperator(input) == false {
+	if input == "" || !hasOperator(input) {
 		return "", errors.New(magicError)
 	}
 	var stack Stack
