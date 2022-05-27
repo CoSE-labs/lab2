@@ -24,6 +24,10 @@ func main() {
 	var input io.Reader = nil
 	var output io.Writer = nil
 
+	if *inputExpression != "" && *inputFile != "" {
+		panic("Wrong format")
+	}
+
 	if *inputExpression != "" {
 		input = strings.NewReader(*inputExpression)
 	} else if *inputFile != "" {
@@ -34,6 +38,7 @@ func main() {
 		defer fil.Close()
 		input = fil
 	}
+
 	if *outputFile != "" {
 		fil, err := os.OpenFile(*outputFile, os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil {
