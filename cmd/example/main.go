@@ -2,8 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	lab2 "github.com/CoSE-labs/lab2"
 )
 
 var (
@@ -21,7 +19,4 @@ func main() {
 	//           Output: {construct io.Writer according the command line parameters},
 	//       }
 	//       err := handler.Compute()
-
-	res, _ := lab2.PostfixToPrefix("+ 2 2")
-	fmt.Println(res)
 }
