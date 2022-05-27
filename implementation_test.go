@@ -26,7 +26,7 @@ func (s *MySuite) TestPostfixToPrefix(c *C) {
 	}
 
 	for actual, expected := range tests {
-		res, err := postfixToPrefix(actual)
+		res, err := PostfixToPrefix(actual)
 		if err == nil {
 			c.Check(res, Equals, expected)
 		} else {
@@ -36,7 +36,7 @@ func (s *MySuite) TestPostfixToPrefix(c *C) {
 }
 
 func Example_postfixToPrefix() {
-	res, err := postfixToPrefix("4 8 3 * +")
+	res, err := PostfixToPrefix("4 8 3 * +")
 	if err != nil {
 		panic(err)
 	}
