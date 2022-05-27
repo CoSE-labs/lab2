@@ -25,7 +25,7 @@ func (ch *ComputeHandler) Compute() error {
 
 	}
 
-	res, err := postfixToPrefix(string(computable))
+	res, err := PostfixToPrefix(string(computable))
 	if err != nil {
 		return err
 	}
