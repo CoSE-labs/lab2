@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-const magicError = "could not convert"
+const magicError = "Could not convert.\n"
 
 type Stack []string
 
