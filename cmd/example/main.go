@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
-	lab2 "github.com/CoSE-labs/lab2"
+	"io"
 	"os"
 	"strings"
+
+	lab2 "github.com/CoSE-labs/lab2"
 )
 
 var (
@@ -19,26 +21,31 @@ func main() {
 
 	flag.Parse()
 
+	var input io.Reader = nil
+	var output io.Writer = nil
+
 	if *inputExpression != "" {
-		mainComputeHandler = lab2.ComputeHandler{Input: strings.NewReader(*inputExpression)}
+		input = strings.NewReader(*inputExpression)
 	} else if *inputFile != "" {
-		fil, err := os.Open(*inputFile)
+		fil, err := os.OpenFile(*inputFile, os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil {
 			panic(err)
 		}
 		defer fil.Close()
-		mainComputeHandler = lab2.ComputeHandler{Input: fil}
+		input = fil
 	}
 	if *outputFile != "" {
-		fil, err := os.Open(*outputFile)
+		fil, err := os.OpenFile(*outputFile, os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil {
 			panic(err)
 		}
 		defer fil.Close()
-		mainComputeHandler = lab2.ComputeHandler{Output: fil}
+		output = fil
 	} else {
-		mainComputeHandler = lab2.ComputeHandler{Output: os.Stdout}
+		output = os.Stdout
 	}
+
+	mainComputeHandler = lab2.ComputeHandler{Input: input, Output: output}
 
 	err := mainComputeHandler.Compute()
 	if err != nil {
